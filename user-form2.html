@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation Form</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            color: #ff006b;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .tagline {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #cccccc;
+            font-weight: 400;
+        }
+        
+        .form-container {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+        
+        .loading, .error, .success {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+        
+        .loading {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #000000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="text"], 
+        input[type="email"], 
+        input[type="tel"], 
+        input[type="datetime-local"], 
+        input[type="number"] {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 12px 16px;
+            font-size: 16px;
+            color: #000000;
+            font-family: 'Inter', sans-serif;
+            border-radius: 4px;
+            transition: border-color 0.2s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #ff006b;
+        }
+        
+        input::placeholder {
+            color: #6c757d;
+        }
+        
+        .activities-section {
+            margin: 40px 0;
+        }
+        
+        .activities-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .activity-card {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        
+        .activity-card:hover {
+            border-color: #ff006b;
+        }
+        
+        .activity-card.selected {
+            border-color: #ff006b;
+            background-color: #fff0f6;
+        }
+        
+        .activity-card input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .activity-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .activity-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .submit-btn {
+            background-color: #ff006b;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #e6005f;
+        }
+        
+        .submit-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .form-container {
+                padding: 25px;
+            }
+            
+            .logo {
+                font-size: 36px;
+            }
+            
+            .tagline {
+                font-size: 20px;
+            }
+            
+            .form-title {
+                font-size: 24px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Lane7</div>
+            <div class="tagline">Bowl. Drink. Eat. Play.</div>
+            <div class="subtitle">Confirm your booking details below</div>
+        </div>
+        
+        <div class="form-container">
+            <h2 class="form-title">Booking Confirmation</h2>
+            
+            <div id="loading" class="loading">Loading your information...</div>
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="success" class="success" style="display: none;"></div>
+            
+            <form id="userForm" style="display: none;">
+                <!-- Hidden fields -->
+                <input type="hidden" id="_id" name="_id">
+                <input type="hidden" id="eventId" name="eventId">
+                <input type="hidden" id="venue" name="venue">
+                <input type="hidden" id="currency" name="currency">
+                <input type="hidden" id="note" name="note">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startTime">Start Time</label>
+                        <input type="datetime-local" id="startTime" name="startTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endTime">End Time</label>
+                        <input type="datetime-local" id="endTime" name="endTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="numberOfPeople">Number of People</label>
+                        <input type="number" id="numberOfPeople" name="numberOfPeople" min="1" required>
+                    </div>
+                </div>
+                
+                <div class="activities-section">
+                    <div class="activities-title">Activities</div>
+                    <div class="activities-grid">
+                        <div class="activity-card" data-activity="Bowling">
+                            <input type="checkbox" id="bowling" name="activities" value="Bowling">
+                            <div class="activity-icon">🎳</div>
+                            <div class="activity-name">Bowling</div>
+                        </div>
+                        <div class="activity-card" data-activity="Beer Pong">
+                            <input type="checkbox" id="beerPong" name="activities" value="Beer Pong">
+                            <div class="activity-icon">🍺</div>
+                            <div class="activity-name">Beer Pong</div>
+                        </div>
+                        <div class="activity-card" data-activity="Pool">
+                            <input type="checkbox" id="pool" name="activities" value="Pool">
+                            <div class="activity-icon">🎱</div>
+                            <div class="activity-name">Pool</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Activity card interactions
+        document.querySelectorAll('.activity-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                
+                if (checkbox.checked) {
+                    this.classList.add('selected');
+                } else {
+                    this.classList.remove('selected');
+                }
+            });
+        });
+
+        // Get token from URL parameters
+        function getTokenFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token');
+        }
+        
+        // Build API URL with dynamic token
+        function getAPIURL(token) {
+            return `https://asamfel.app.n8n.cloud/webhook/get-user-token?token=${token}`;
+        }
+        
+        // Function to show/hide elements
+        function showElement(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+        
+        function hideElement(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        
+        function showError(message) {
+            document.getElementById('error').textContent = message;
+            showElement('error');
+        }
+        
+        function showSuccess(message) {
+            document.getElementById('success').textContent = message;
+            showElement('success');
+        }
+        
+        // Function to convert date to datetime-local format
+        function formatDateTimeLocal(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+        
+        // Function to populate form with fetched data
+        function populateForm(data) {
+            // Check if data has user object
+            const user = data.user || data;
+            
+            // Hidden fields
+            document.getElementById('_id').value = user._id || '';
+            document.getElementById('eventId').value = user.eventId || '';
+            document.getElementById('venue').value = user.venue || '';
+            document.getElementById('currency').value = user.currency || '';
+            document.getElementById('note').value = user.note || '';
+            
+            // Visible fields
+            document.getElementById('firstName').value = user.firstName || '';
+            document.getElementById('lastName').value = user.lastName || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phoneNumber').value = user.phoneNumber || '';
+            document.getElementById('startTime').value = formatDateTimeLocal(user.startTime);
+            document.getElementById('endTime').value = formatDateTimeLocal(user.endTime);
+            document.getElementById('numberOfPeople').value = user.numberOfPeople || '';
+            
+            // Activities checkboxes
+            const activities = user.activities || [];
+            document.getElementById('bowling').checked = activities.includes('Bowling');
+            document.getElementById('beerPong').checked = activities.includes('Beer Pong');
+            document.getElementById('pool').checked = activities.includes('Pool');
+            
+            // Update activity card visual states
+            document.querySelectorAll('.activity-card').forEach(card => {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    card.classList.add('selected');
+                }
+            });
+        }
+        
+        // Function to fetch user data on page load
+        async function fetchUserData() {
+            try {
+                const token = getTokenFromURL();
+                
+                // Check if token exists
+                if (!token) {
+                    hideElement('loading');
+                    showError('Invalid or missing token. Please provide a valid token in the URL.');
+                    return;
+                }
+                
+                const apiUrl = getAPIURL(token);
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                hideElement('loading');
+                
+                // Check if user has already confirmed their details
+                if (data.result && data.result === "You've already confirmed your details") {
+                    showSuccess("You've already confirmed your details. No further action is needed.");
+                    return;
+                }
+                
+                populateForm(data);
+                showElement('userForm');
+                
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                hideElement('loading');
+                showError('Invalid token or failed to load user data. Please check your token and try again.');
+            }
+        }
+        
+        // Function to collect form data
+        function collectFormData() {
+            const formData = new FormData();
+            
+            // Hidden fields
+            formData.append('_id', document.getElementById('_id').value);
+            formData.append('eventId', document.getElementById('eventId').value);
+            formData.append('venue', document.getElementById('venue').value);
+            formData.append('currency', document.getElementById('currency').value);
+            formData.append('note', document.getElementById('note').value);
+            
+            // Visible fields
+            formData.append('firstName', document.getElementById('firstName').value);
+            formData.append('lastName', document.getElementById('lastName').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('phoneNumber', document.getElementById('phoneNumber').value);
+            formData.append('startTime', document.getElementById('startTime').value);
+            formData.append('endTime', document.getElementById('endTime').value);
+            formData.append('numberOfPeople', document.getElementById('numberOfPeople').value);
+            
+            // Activities array
+            const activities = [];
+            if (document.getElementById('bowling').checked) activities.push('Bowling');
+            if (document.getElementById('beerPong').checked) activities.push('Beer Pong');
+            if (document.getElementById('pool').checked) activities.push('Pool');
+            formData.append('activities', JSON.stringify(activities));
+            
+            return formData;
+        }
+        
+        // Form submission handler
+        document.getElementById('userForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            hideElement('error');
+            hideElement('success');
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const formData = collectFormData();
+                
+                const response = await fetch('https://asamfel.app.n8n.cloud/webhook/confirm-booking-details', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                showSuccess('Form submitted successfully!');
+                
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                showError('Failed to submit form. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirm Booking';
+            }
+        });
+        
+        // Load user data when page loads
+        window.addEventListener('DOMContentLoaded', fetchUserData);
+    </script>
+</body>
+</html>
