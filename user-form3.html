@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Confirmation | Lane7</title>
+  <style>
+    /* General Page Styling */
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 50px 20px;
+    }
+
+    /* Form Card */
+    .form-container {
+      background: #111;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 650px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 26px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ffcc00;
+    }
+
+    /* Input Groups */
+    .form-group {
+      margin-bottom: 20px;
+      animation: fadeIn 0.6s ease-in both;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #ddd;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="datetime-local"],
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #fff;
+      background: #1d1d1d;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #ffcc00;
+      background: #222;
+      box-shadow: 0 0 6px #ffcc00aa;
+    }
+
+    /* Activities checkboxes */
+    .activities-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1a1a;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .activity-item:hover {
+      background: #292929;
+    }
+
+    .activity-item input[type="checkbox"] {
+      transform: scale(1.2);
+      accent-color: #ffcc00;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      background: #ffcc00;
+      color: #111;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #ffd633;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255,204,0,0.3);
+    }
+
+    .loading, .error, .success {
+      margin-bottom: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .loading {
+      color: #bbb;
+      font-style: italic;
+    }
+
+    .error {
+      background: #661d1d;
+      color: #ff9999;
+    }
+
+    .success {
+      background: #1d6629;
+      color: #b4ffb9;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Booking Confirmation</h2>
+
+    <div id="loading" class="loading">Loading your booking...</div>
+    <div id="error" class="error" style="display:none;"></div>
+    <div id="success" class="success" style="display:none;"></div>
+
+    <form id="userForm" style="display:none;">
+      <!-- Hidden fields -->
+      <input type="hidden" id="_id" name="_id">
+      <input type="hidden" id="eventId" name="eventId">
+      <input type="hidden" id="venue" name="venue">
+      <input type="hidden" id="currency" name="currency">
+      <input type="hidden" id="note" name="note">
+
+      <!-- Visible fields -->
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+      </div>
+
+      <div class="form-group">
+        <label for="startTime">Start Time</label>
+        <input type="datetime-local" id="startTime" name="startTime" required>
+      </div>
+
+      <div class="form-group">
+        <label for="endTime">End Time</label>
+        <input type="datetime-local" id="endTime" name="endTime" required>
+      </div>
+
+      <div class="form-group">
+        <label>Activities</label>
+        <div class="activities-group">
+          <label class="activity-item">
+            <input type="checkbox" id="bowling" name="activities" value="Bowling">
+            Bowling
+          </label>
+          <label class="activity-item">
+            <input type="checkbox" id="beerPong" name="activities" value="Beer Pong">
+            Beer Pong
+          </label>
+          <label class="activity-item">
+            <input type="checkbox" id="pool" name="activities" value="Pool">
+            Pool
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="numberOfPeople">Number of People</label>
+        <input type="number" id="numberOfPeople" name="numberOfPeople" min="1" required>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Changes</button>
+    </form>
+  </div>
+
+  <script>
+    function getTokenFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('token');
+    }
+
+    function getAPIURL(token) {
+      return `https://asamfel.app.n8n.cloud/webhook/get-user-token?token=${token}`;
+    }
+
+    function showElement(id) { document.getElementById(id).style.display = 'block'; }
+    function hideElement(id) { document.getElementById(id).style.display = 'none'; }
+    function showError(msg) { document.getElementById('error').textContent = msg; showElement('error'); }
+    function showSuccess(msg) { document.getElementById('success').textContent = msg; showElement('success'); }
+
+    function formatDateTimeLocal(dateString) {
+      if (!dateString) return '';
+      const d = new Date(dateString);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+
+    function populateForm(data) {
+      const u = data.user || data;
+      document.getElementById('_id').value = u._id || '';
+      document.getElementById('eventId').value = u.eventId || '';
+      document.getElementById('venue').value = u.venue || '';
+      document.getElementById('currency').value = u.currency || '';
+      document.getElementById('note').value = u.note || '';
+
+      document.getElementById('firstName').value = u.firstName || '';
+      document.getElementById('lastName').value = u.lastName || '';
+      document.getElementById('email').value = u.email || '';
+      document.getElementById('phoneNumber').value = u.phoneNumber || '';
+      document.getElementById('startTime').value = formatDateTimeLocal(u.startTime);
+      document.getElementById('endTime').value = formatDateTimeLocal(u.endTime);
+      document.getElementById('numberOfPeople').value = u.numberOfPeople || '';
+
+      const acts = u.activities || [];
+      document.getElementById('bowling').checked = acts.includes('Bowling');
+      document.getElementById('beerPong').checked = acts.includes('Beer Pong');
+      document.getElementById('pool').checked = acts.includes('Pool');
+    }
+
+    async function fetchUserData() {
+      try {
+        const token = getTokenFromURL();
+        if (!token) { hideElement('loading'); showError('Missing token.'); return; }
+        const res = await fetch(getAPIURL(token));
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        hideElement('loading');
+        if (data.result && data.result.includes("already confirmed")) {
+          showSuccess("You've already confirmed your details.");
+          return;
+        }
+        populateForm(data);
+        showElement('userForm');
+      } catch (err) {
+        hideElement('loading'); showError('Failed to load booking details.');
+      }
+    }
+
+    function collectFormData() {
+      const fd = new FormData();
+      fd.append('_id', document.getElementById('_id').value);
+      fd.append('eventId', document.getElementById('eventId').value);
+      fd.append('venue', document.getElementById('venue').value);
+      fd.append('currency', document.getElementById('currency').value);
+      fd.append('note', document.getElementById('note').value);
+      fd.append('firstName', document.getElementById('firstName').value);
+      fd.append('lastName', document.getElementById('lastName').value);
+      fd.append('email', document.getElementById('email').value);
+      fd.append('phoneNumber', document.getElementById('phoneNumber').value);
+      fd.append('startTime', document.getElementById('startTime').value);
+      fd.append('endTime', document.getElementById('endTime').value);
+      fd.append('numberOfPeople', document.getElementById('numberOfPeople').value);
+      const acts = [];
+      if (document.getElementById('bowling').checked) acts.push('Bowling');
+      if (document.getElementById('beerPong').checked) acts.push('Beer Pong');
+      if (document.getElementById('pool').checked) acts.push('Pool');
+      fd.append('activities', JSON.stringify(acts));
+      return fd;
+    }
+
+    document.getElementById('userForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      hideElement('error'); hideElement('success');
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = true; btn.textContent = 'Submitting...';
+      try {
+        const fd = collectFormData();
+        const res = await fetch('https://asamfel.app.n8n.cloud/webhook/confirm-booking-details', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error();
+        showSuccess('Booking confirmed successfully!');
+      } catch {
+        showError('Failed to submit booking.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Submit Changes';
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', fetchUserData);
+  </script>
+</body>
+</html>
